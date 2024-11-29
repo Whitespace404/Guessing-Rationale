@@ -30,6 +30,22 @@ def calculate_score(responses, answers):
     return score
 
 
-answers = generate_answer_key()
-response = generate_response(4, answers)
-print(calculate_score(response, answers))
+def run_simulation(papers, correct_percent, attempt_questions):
+    scores = []
+    for _ in range(papers):
+
+        answers = generate_answer_key()
+        response = generate_response(
+            attempt_no=attempt_questions,
+            correct_percent=correct_percent,
+            answers=answers,
+        )
+        score = calculate_score(response, answers)
+        scores.append(score)
+
+    print(
+        f"Ran a simulation on {papers} papers, attempting {attempt_questions} questions, assuming a {correct_percent}% accuracy"
+    )
+    print("Highest simulated:", max(scores))
+    print("Lowest simulated:", min(scores))
+    print("Average score simulated:", sum(scores) / len(scores))
