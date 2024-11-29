@@ -56,6 +56,4 @@ def run_simulation(papers, accuracy, attempt_questions):
     print("Highest simulated:", max(scores), "\t", "Lowest simulated:", min(scores))
 
 
-run_simulation(
-    papers=1000, accuracy=75, attempt_questions=50
-)  # attempt_questions must be 60
+run_simulation(papers=1000, accuracy=75, attempt_questions=50)  # total questions = 60
