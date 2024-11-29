@@ -1,18 +1,23 @@
 import random
 
+# Defining some constants
+QUESTIONS = 60  # number of questions in the paper
+CORRECT_POINTS = 4  # points awarded for correct answer
+WRONG_POINTS = -1  # points awarded for incorrect answer
+
 
 def generate_answer_key():
-    return {i + 1: random.choice(["A", "B", "C", "D"]) for i in range(60)}
+    return {i + 1: random.choice(["A", "B", "C", "D"]) for i in range(QUESTIONS)}
 
 
-def generate_response(attempt_no, answers, correct_percent=100):
+def generate_response(attempt_no, answers, accuracy=100):
     response = {}
     for answer in answers:
         attempt_no -= 1
-        if random.uniform(0, 100) < correct_percent:
+        if random.uniform(0, 100) < accuracy:
             response[answer] = answers.get(answer)  # put in the correct answer
         else:
-            response[answer] = "X"
+            response[answer] = "X"  # wrong answer chosen
 
         if attempt_no <= 0:
             break
@@ -24,28 +29,33 @@ def calculate_score(responses, answers):
     score = 0
     for question, answer in responses.items():
         if answers[question] == answer:
-            score += 4
+            score += CORRECT_POINTS
         if answers[question] != answer:
-            score -= 1
+            score += WRONG_POINTS
     return score
 
 
-def run_simulation(papers, correct_percent, attempt_questions):
+def run_simulation(papers, accuracy, attempt_questions):
     scores = []
     for _ in range(papers):
-
         answers = generate_answer_key()
+        assert attempt_questions <= QUESTIONS
+
         response = generate_response(
             attempt_no=attempt_questions,
-            correct_percent=correct_percent,
+            accuracy=accuracy,
             answers=answers,
         )
         score = calculate_score(response, answers)
         scores.append(score)
 
     print(
-        f"Ran a simulation on {papers} papers, attempting {attempt_questions} questions, assuming a {correct_percent}% accuracy"
+        f"Ran a simulation on {papers} papers, attempting {attempt_questions} questions, assuming a {accuracy}% accuracy"
     )
-    print("Highest simulated:", max(scores))
-    print("Lowest simulated:", min(scores))
     print("Average score simulated:", sum(scores) / len(scores))
+    print("Highest simulated:", max(scores), "\t", "Lowest simulated:", min(scores))
+
+
+run_simulation(
+    papers=1000, accuracy=75, attempt_questions=50
+)  # attempt_questions must be 60
